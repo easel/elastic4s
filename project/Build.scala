@@ -3,6 +3,7 @@ import sbt.Keys._
 import sbt.{Credentials, Path, _}
 import sbt.plugins.JvmPlugin
 import xerial.sbt.Sonatype
+import bintray.BintrayKeys._
 
 object Build extends AutoPlugin {
 
@@ -65,7 +66,6 @@ object Build extends AutoPlugin {
     } else {
       credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
     },
-    publishTo := Sonatype.autoImport.sonatypePublishTo.value,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
@@ -78,15 +78,18 @@ object Build extends AutoPlugin {
     if (isTravis) {
       version := s"7.3.2.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.3.1"
+      version := "7.3.1.ss.0"
     },
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (version.value.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
+    bintrayOrganization := Some("7thsense"),
+    licenses += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
+//    publishTo := Sonatype.autoImport.sonatypePublishTo.value,
+//    publishTo := {
+//      val nexus = "https://oss.sonatype.org/"
+//      if (version.value.trim.endsWith("SNAPSHOT"))
+//        Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else
+//        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+//    },
     pomExtra :=
       <url>https://github.com/sksamuel/elastic4s</url>
         <licenses>
